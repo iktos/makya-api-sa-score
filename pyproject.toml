@@ -38,7 +38,7 @@ test = "python -m pytest --cov-report=term --cov-report=html:cov_html --cov ./sr
 test-watch = "pytest-watch -- --cov-report=term --cov-report=html:cov_html --cov ./src"
 start = "poetry run task autolint && poetry run task run"
 startprod = "PYTHON_ENV=production poetry run task run"
-run = "uvicorn serve-sascore:app --host 0.0.0.0 --port 5555 --reload-dir . --workers 20"
+run = "uvicorn serve-sascore:app --host 0.0.0.0 --port 5555 --reload-dir . --workers 1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
