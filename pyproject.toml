@@ -1,0 +1,72 @@
+[tool.poetry]
+name = "makya-api-sa-score"
+version = "1.0.0"
+description = ""
+authors = ["Abderraouf El Gasser <abderraouf.elgasser@iktos.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+taskipy = "^1.3.0"
+uvicorn = "*"
+fastapi = "*"
+pydantic = "*"
+rdkit = "*"
+
+
+[tool.poetry.dev-dependencies]
+black = "*"
+flake8 = "*"
+flake8-colors = "*"
+autopep8 = "*"
+mypy = "*"
+isort = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-asyncio = "*"
+pytest-watch = "*"
+types-setuptools = "*"
+
+
+[tool.taskipy.tasks]
+black = "black . --skip-string-normalization"
+check-black = "black src --check && black serve-sascore.py --check"
+linter = "flake8 src && flake8 serve-sascore.py"
+mypy = "mypy serve-sascore.py && mypy src/"
+isort = "isort src/"
+autolint = "poetry run task isort && poetry run task black && poetry run task linter && poetry run task mypy"
+test = "python -m pytest --cov-report=term --cov-report=html:cov_html --cov ./src"
+test-watch = "pytest-watch -- --cov-report=term --cov-report=html:cov_html --cov ./src"
+start = "poetry run task autolint && poetry run task run"
+startprod = "PYTHON_ENV=production poetry run task run"
+run = "uvicorn serve-sascore:app --host 0.0.0.0 --port 5555 --reload-dir . --workers 20"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+atomic = true
+sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+
+[tool.black]
+target-version = ['py39']
+skip-string-normalization = true
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+ignore_missing_imports = true
